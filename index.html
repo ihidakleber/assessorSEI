@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Assessor SEI</title>
+  <meta name="description" content="Gera despachos e decisões padronizados, prontos para colar no SEI.">
+  <link rel="stylesheet" href="css/estilo.css">
+</head>
+<body>
+  <header class="topo">
+    <div class="topo-titulo">
+      <h1>Assessor SEI</h1>
+      <p>Despachos e decisões padronizados, prontos para colar no SEI.</p>
+    </div>
+    <p class="privacidade" title="A página não tem servidor: o texto é montado no próprio navegador.">
+      Os dados digitados ficam só neste navegador e somem ao fechar a página.
+    </p>
+  </header>
+
+  <main class="layout">
+    <section class="coluna-form" aria-label="Dados do processo">
+      <div class="barra-form">
+        <label class="seletor-modelo">
+          <span>Assunto</span>
+          <select id="seletor-modelo"></select>
+        </label>
+        <div class="acoes-form">
+          <button type="button" id="btn-exemplo" class="btn btn-sec">Preencher exemplo</button>
+          <button type="button" id="btn-limpar" class="btn btn-sec">Limpar</button>
+        </div>
+      </div>
+
+      <form id="formulario" autocomplete="off" novalidate></form>
+
+      <details class="configuracoes">
+        <summary>Configurações</summary>
+        <div id="configuracoes"></div>
+        <label class="campo-check">
+          <input type="checkbox" id="cfg-inline">
+          <span>Ao copiar, incluir também a formatação inline (fonte, recuo), além do estilo do SEI</span>
+        </label>
+        <button type="button" id="btn-restaurar" class="btn btn-sec">Restaurar padrões</button>
+      </details>
+    </section>
+
+    <section class="coluna-previa" aria-label="Documento gerado">
+      <div class="barra-previa">
+        <div id="abas" class="abas" role="tablist"></div>
+        <div class="acoes-previa">
+          <button type="button" id="btn-copiar" class="btn btn-pri">Copiar para o SEI</button>
+          <button type="button" id="btn-copiar-texto" class="btn btn-sec">Copiar texto simples</button>
+        </div>
+      </div>
+      <div id="avisos" class="avisos" aria-live="polite"></div>
+      <div id="pendentes" class="pendentes" aria-live="polite"></div>
+      <article id="previa" class="papel"></article>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="js/util.js"></script>
+  <script src="js/motor.js"></script>
+  <script src="js/config.js"></script>
+  <!-- Modelos: para criar um novo assunto, adicione um arquivo em modelos/ e inclua aqui. -->
+  <script src="modelos/readaptacao.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
