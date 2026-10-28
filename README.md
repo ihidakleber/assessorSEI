@@ -8,7 +8,9 @@ Justiça, relotação, GTPO, Sebio/SST) e as datas calculadas.
 
 - **Sem servidor:** é uma página estática (HTML + JavaScript). O texto é montado no próprio navegador e
   **nenhum dado é enviado ou gravado**. Isso importa porque readaptação envolve dado de saúde (LGPD).
-  Só as configurações (vocativo, número dos atos) ficam salvas no navegador.
+  Só as configurações (vocativo, número dos atos) ficam salvas no navegador. O próprio navegador é
+  instruído a bloquear qualquer conexão da página. Explicação e roteiro de conferência na aba Rede:
+  [PRIVACIDADE.md](PRIVACIDADE.md).
 - **Saída para o SEI:** o botão **Copiar para o SEI** copia o texto já com os estilos de parágrafo do SEI
   (`Texto_Justificado_Recuo_Primeira_Linha`, `Citacao` etc.). Basta colar com Ctrl+V no editor do
   documento. **Copiar texto simples** copia sem formatação.

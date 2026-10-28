@@ -3,6 +3,16 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!--
+    Trava de privacidade aplicada pelo próprio navegador (Content-Security-Policy):
+    só executa scripts e estilos deste site e proíbe qualquer conexão de rede iniciada
+    pela página (connect-src 'none') e envio de formulário (form-action 'none').
+    Explicação completa e como conferir: PRIVACIDADE.md
+  -->
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src data:; connect-src 'none'; form-action 'none'; base-uri 'none'">
+  <!-- Ícone embutido: evita que o navegador busque /favicon.ico no servidor. -->
+  <link rel="icon" href="data:,">
   <title>Assessor SEI</title>
   <meta name="description" content="Gera despachos e decisões padronizados, prontos para colar no SEI.">
   <link rel="stylesheet" href="css/estilo.css">
