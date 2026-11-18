@@ -107,3 +107,18 @@ js/app.js               formulário, prévia e cópia
 modelos/readaptacao.js  campos e textos do assunto Readaptação
 testes/gerar.test.js    testes
 ```
+
+## Versão em Excel
+
+`planilha/AssessorSEI-Readaptacao.xlsx` faz o mesmo em Excel, sem macros (Excel 2010 ou mais novo).
+
+1. Na aba **Dados**, preencha as células amarelas. As datas finais e o início da prorrogação são
+   calculados quando a célula fica vazia. Pendências e avisos aparecem no fim da aba.
+2. Nas abas **Despacho** e **Decisão**, selecione o intervalo indicado na célula C1 (ex.: `A1:A15`)
+   e copie.
+3. No SEI, cole com **Ctrl+Shift+V** (colar como texto). O Ctrl+V comum cola uma tabela.
+   Os artigos de lei chegam como texto comum; aplique o estilo "Citação" do SEI, se quiser.
+4. Feche **sem salvar**, para não guardar dados pessoais no arquivo.
+
+Os textos ficam nas fórmulas da aba oculta `Calc`. Para mudar um texto de forma segura, edite
+`planilha/gerar_planilha.py` e gere a planilha de novo com `python3 planilha/gerar_planilha.py`.
