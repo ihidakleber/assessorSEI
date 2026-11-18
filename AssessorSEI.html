@@ -1,0 +1,1654 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!--
+    Trava de privacidade aplicada pelo próprio navegador (Content-Security-Policy):
+    só executa scripts e estilos deste site e proíbe qualquer conexão de rede iniciada
+    pela página (connect-src 'none') e envio de formulário (form-action 'none').
+    Explicação completa e como conferir: PRIVACIDADE.md
+  -->
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'none'; script-src 'sha256-dSzm0GwpV1GBUuDb35+izP4I4AfDc8YLwLr0R2yayBs=' 'sha256-Alvw7XbbdZDvNmFy88Dak1oUGc1vlXUah61tfG72xTw=' 'sha256-eEWMObFJen8AAH8xeRhaxqA9dKhRJoB69Rsfhrd6WLE=' 'sha256-txw46q2pTxtSmYlTs/u1AmhQsrXb/xrwLG93XDKIcrA=' 'sha256-MYl1Fc9VKfDc2MXWtwkGXrBNd7Slf10w8DdiqzQwS/4='; style-src 'unsafe-inline'; img-src data:; connect-src 'none'; form-action 'none'; base-uri 'none'">
+  <!-- Ícone embutido: evita que o navegador busque /favicon.ico no servidor. -->
+  <link rel="icon" href="data:,">
+  <title>Assessor SEI</title>
+  <!-- Arquivo gerado por gerar_html_unico.py; edite os originais. -->
+  <meta name="description" content="Gera despachos e decisões padronizados, prontos para colar no SEI.">
+  <style>
+:root {
+  --fundo: #f4f5f7;
+  --superficie: #ffffff;
+  --borda: #d8dce3;
+  --borda-forte: #b9c0cc;
+  --texto: #1d232c;
+  --texto-suave: #5b6573;
+  --primaria: #1f5f8b;
+  --primaria-hover: #174a6d;
+  --primaria-suave: #e6f0f7;
+  --sobre-primaria: #ffffff;
+  --aviso-fundo: #fff6e0;
+  --aviso-borda: #e8c165;
+  --aviso-texto: #6b4e00;
+  --pendente: #fff2a8;
+  --sombra: 0 1px 2px rgba(16, 24, 40, .06), 0 1px 3px rgba(16, 24, 40, .08);
+  --raio: 8px;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --fundo: #14171c;
+    --superficie: #1d2128;
+    --borda: #343a44;
+    --borda-forte: #4a5260;
+    --texto: #e6e9ee;
+    --texto-suave: #a2abb8;
+    --primaria: #5aa6dc;
+    --primaria-hover: #7bbbe8;
+    --primaria-suave: #1f3346;
+    --sobre-primaria: #0b1620;
+    --aviso-fundo: #3a2f12;
+    --aviso-borda: #7a6326;
+    --aviso-texto: #f2d68a;
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --fundo: #14171c;
+  --superficie: #1d2128;
+  --borda: #343a44;
+  --borda-forte: #4a5260;
+  --texto: #e6e9ee;
+  --texto-suave: #a2abb8;
+  --primaria: #5aa6dc;
+  --primaria-hover: #7bbbe8;
+  --primaria-suave: #1f3346;
+  --sobre-primaria: #0b1620;
+  --aviso-fundo: #3a2f12;
+  --aviso-borda: #7a6326;
+  --aviso-texto: #f2d68a;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--fundo);
+  color: var(--texto);
+  font: 15px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+/* ---------- Topo ---------- */
+
+.topo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 8px 24px;
+  padding: 16px 24px;
+  background: var(--superficie);
+  border-bottom: 1px solid var(--borda);
+}
+.topo h1 { margin: 0; font-size: 1.35rem; letter-spacing: -.01em; }
+.topo-titulo p { margin: 2px 0 0; color: var(--texto-suave); }
+.privacidade {
+  margin: 0;
+  font-size: .85rem;
+  color: var(--texto-suave);
+  padding-left: 18px;
+  position: relative;
+}
+.privacidade::before {
+  content: "";
+  position: absolute;
+  left: 0; top: .35em;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: #2e9d5b;
+}
+
+/* ---------- Layout ---------- */
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  gap: 24px;
+  padding: 24px;
+  align-items: start;
+  max-width: 1500px;
+  margin: 0 auto;
+}
+
+.coluna-previa {
+  position: sticky;
+  top: 16px;
+  max-height: calc(100vh - 32px);
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* ---------- Formulário ---------- */
+
+.barra-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.seletor-modelo { display: flex; flex-direction: column; gap: 4px; flex: 1 1 240px; }
+.seletor-modelo span { font-size: .8rem; font-weight: 600; color: var(--texto-suave); text-transform: uppercase; letter-spacing: .04em; }
+.acoes-form { display: flex; gap: 8px; }
+
+.secao {
+  margin: 0 0 16px;
+  padding: 16px;
+  border: 1px solid var(--borda);
+  border-radius: var(--raio);
+  background: var(--superficie);
+  box-shadow: var(--sombra);
+}
+.secao[hidden] { display: none; }
+.secao legend {
+  padding: 0 6px;
+  margin-left: -6px;
+  font-weight: 650;
+  font-size: .95rem;
+}
+
+.grade {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+.campo { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.campo[hidden] { display: none; }
+.l1 { grid-column: span 1; }
+.l2 { grid-column: span 2; }
+.l3 { grid-column: span 3; }
+.l4 { grid-column: span 4; }
+
+.rotulo {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: .85rem;
+  font-weight: 600;
+  color: var(--texto-suave);
+}
+.dica { font-weight: 400; font-size: .78rem; }
+
+input[type="text"], input[type="number"], input[type="date"], select {
+  width: 100%;
+  min-width: 0;
+  padding: 8px 10px;
+  font: inherit;
+  color: var(--texto);
+  background: var(--superficie);
+  border: 1px solid var(--borda-forte);
+  border-radius: 6px;
+}
+input:focus-visible, select:focus-visible, button:focus-visible {
+  outline: 2px solid var(--primaria);
+  outline-offset: 1px;
+}
+input.automatico { background: var(--primaria-suave); }
+
+.linha-composta { display: flex; gap: 6px; }
+.linha-composta input { flex: 1 1 auto; }
+.linha-composta select { flex: 0 0 auto; width: auto; }
+
+.reset-auto {
+  border: 0;
+  background: none;
+  color: var(--primaria);
+  font: inherit;
+  font-size: .78rem;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0;
+}
+.reset-auto:hover { text-decoration: underline; }
+.tag-auto { font-size: .72rem; font-weight: 500; color: var(--primaria); }
+
+/* Opções em botões segmentados */
+.segmentado {
+  display: inline-flex;
+  flex-wrap: wrap;
+  border: 1px solid var(--borda-forte);
+  border-radius: 6px;
+  overflow: hidden;
+  width: fit-content;
+  max-width: 100%;
+}
+.segmentado label { position: relative; }
+.segmentado input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+.segmentado span {
+  display: block;
+  padding: 7px 14px;
+  font-size: .9rem;
+  cursor: pointer;
+  user-select: none;
+  border-right: 1px solid var(--borda);
+}
+.segmentado label:last-child span { border-right: 0; }
+.segmentado input:checked + span { background: var(--primaria); color: var(--sobre-primaria); }
+.segmentado input:focus-visible + span { outline: 2px solid var(--primaria); outline-offset: -3px; }
+
+.campo-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: .9rem;
+  cursor: pointer;
+}
+.campo-check input { margin-top: 3px; }
+
+.parecer {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 170px);
+  gap: 8px 12px;
+  align-items: center;
+}
+.parecer .descricao { color: var(--texto-suave); font-weight: 400; }
+
+/* ---------- Configurações ---------- */
+
+.configuracoes {
+  border: 1px dashed var(--borda-forte);
+  border-radius: var(--raio);
+  padding: 10px 16px;
+  margin-bottom: 24px;
+}
+.configuracoes summary { cursor: pointer; font-weight: 600; }
+.configuracoes[open] summary { margin-bottom: 12px; }
+#configuracoes { display: grid; gap: 10px; margin-bottom: 12px; }
+.configuracoes .btn { margin-top: 12px; }
+
+/* ---------- Botões ---------- */
+
+.btn {
+  font: inherit;
+  font-size: .9rem;
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+.btn-pri { background: var(--primaria); color: var(--sobre-primaria); }
+.btn-pri:hover { background: var(--primaria-hover); }
+.btn-sec { background: var(--superficie); color: var(--texto); border-color: var(--borda-forte); }
+.btn-sec:hover { border-color: var(--primaria); color: var(--primaria); }
+
+/* ---------- Prévia ---------- */
+
+.barra-previa {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.abas { display: flex; gap: 4px; }
+.aba {
+  font: inherit;
+  font-weight: 600;
+  padding: 8px 14px;
+  border: 1px solid var(--borda);
+  border-radius: 6px;
+  background: var(--superficie);
+  color: var(--texto-suave);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.aba[aria-selected="true"] { color: var(--primaria); border-color: var(--primaria); background: var(--primaria-suave); }
+.contador {
+  min-width: 20px;
+  padding: 0 6px;
+  border-radius: 10px;
+  background: var(--pendente);
+  color: #5c4a00;
+  font-size: .75rem;
+  line-height: 20px;
+  text-align: center;
+}
+.acoes-previa { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.avisos:empty, .pendentes:empty { display: none; }
+.avisos, .pendentes {
+  margin-bottom: 10px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: .85rem;
+}
+.avisos { background: var(--aviso-fundo); border: 1px solid var(--aviso-borda); color: var(--aviso-texto); }
+.avisos ul { margin: 0; padding-left: 18px; }
+.pendentes { background: var(--superficie); border: 1px solid var(--borda); color: var(--texto-suave); }
+.pendentes strong { color: var(--texto); }
+.pendentes.ok { border-color: #2e9d5b; color: #2e9d5b; }
+
+/* "Papel" imitando o editor do SEI: sempre claro, como no SEI. */
+.papel {
+  flex: 1 1 auto;
+  overflow: auto;
+  background: #fff;
+  color: #000;
+  border: 1px solid var(--borda);
+  border-radius: var(--raio);
+  box-shadow: var(--sombra);
+  padding: 32px 40px;
+  font-family: Calibri, Carlito, "Segoe UI", Arial, sans-serif;
+  font-size: 12pt;
+}
+.papel p { margin: 6pt; text-align: justify; text-indent: 25mm; word-wrap: break-word; }
+.papel .sei-vocativo { text-indent: 0; text-align: left; }
+.papel .sei-citacao { font-size: 10pt; margin: 4pt 0 4pt 160px; text-indent: 0; }
+.papel mark.pendente { background: var(--pendente); color: #000; border-radius: 2px; padding: 0 2px; }
+
+/* ---------- Aviso flutuante ---------- */
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translate(-50%, 20px);
+  background: #1d232c;
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-size: .9rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .2s, transform .2s;
+  max-width: calc(100vw - 32px);
+}
+.toast.visivel { opacity: 1; transform: translate(-50%, 0); }
+
+/* ---------- Telas estreitas ---------- */
+
+@media (max-width: 1000px) {
+  .layout { grid-template-columns: minmax(0, 1fr); padding: 16px; gap: 16px; }
+  .coluna-previa { position: static; max-height: none; }
+  .papel { max-height: 80vh; padding: 20px 16px; }
+  .papel p { text-indent: 12mm; }
+  .papel .sei-citacao { margin-left: 40px; }
+  .topo { padding: 12px 16px; }
+}
+
+@media (max-width: 560px) {
+  .grade { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .l3, .l4 { grid-column: span 2; }
+  .parecer { grid-template-columns: minmax(0, 1fr); }
+  .acoes-previa, .acoes-previa .btn { width: 100%; }
+}
+</style>
+</head>
+<body>
+  <header class="topo">
+    <div class="topo-titulo">
+      <h1>Assessor SEI</h1>
+      <p>Despachos e decisões padronizados, prontos para colar no SEI.</p>
+    </div>
+    <p class="privacidade" title="A página não tem servidor: o texto é montado no próprio navegador.">
+      Os dados digitados ficam só neste navegador e somem ao fechar a página.
+    </p>
+  </header>
+
+  <main class="layout">
+    <section class="coluna-form" aria-label="Dados do processo">
+      <div class="barra-form">
+        <label class="seletor-modelo">
+          <span>Assunto</span>
+          <select id="seletor-modelo"></select>
+        </label>
+        <div class="acoes-form">
+          <button type="button" id="btn-exemplo" class="btn btn-sec">Preencher exemplo</button>
+          <button type="button" id="btn-limpar" class="btn btn-sec">Limpar</button>
+        </div>
+      </div>
+
+      <form id="formulario" autocomplete="off" novalidate></form>
+
+      <details class="configuracoes">
+        <summary>Configurações</summary>
+        <div id="configuracoes"></div>
+        <label class="campo-check">
+          <input type="checkbox" id="cfg-inline">
+          <span>Ao copiar, incluir também a formatação inline (fonte, recuo), além do estilo do SEI</span>
+        </label>
+        <button type="button" id="btn-restaurar" class="btn btn-sec">Restaurar padrões</button>
+      </details>
+    </section>
+
+    <section class="coluna-previa" aria-label="Documento gerado">
+      <div class="barra-previa">
+        <div id="abas" class="abas" role="tablist"></div>
+        <div class="acoes-previa">
+          <button type="button" id="btn-copiar" class="btn btn-pri">Copiar para o SEI</button>
+          <button type="button" id="btn-copiar-texto" class="btn btn-sec">Copiar texto simples</button>
+        </div>
+      </div>
+      <div id="avisos" class="avisos" aria-live="polite"></div>
+      <div id="pendentes" class="pendentes" aria-live="polite"></div>
+      <article id="previa" class="papel"></article>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script>
+/*
+ * Funções utilitárias: números por extenso, datas, artigos/contrações e escape de HTML.
+ * Funciona no navegador (window.Util) e no Node (module.exports), para permitir testes.
+ */
+(function (raiz, fabrica) {
+  if (typeof module === 'object' && module.exports) module.exports = fabrica();
+  else raiz.Util = fabrica();
+})(typeof self !== 'undefined' ? self : this, function () {
+  'use strict';
+
+  // ---------- Números por extenso (masculino, 0 a 999) ----------
+
+  const UNIDADES = ['zero', 'um', 'dois', 'três', 'quatro', 'cinco', 'seis', 'sete', 'oito', 'nove',
+    'dez', 'onze', 'doze', 'treze', 'quatorze', 'quinze', 'dezesseis', 'dezessete', 'dezoito', 'dezenove'];
+  const DEZENAS = ['', '', 'vinte', 'trinta', 'quarenta', 'cinquenta', 'sessenta', 'setenta', 'oitenta', 'noventa'];
+  const CENTENAS = ['', 'cento', 'duzentos', 'trezentos', 'quatrocentos', 'quinhentos', 'seiscentos',
+    'setecentos', 'oitocentos', 'novecentos'];
+
+  function extenso(n) {
+    n = Number(n);
+    if (!Number.isInteger(n) || n < 0 || n > 999) return String(n);
+    if (n < 20) return UNIDADES[n];
+    if (n < 100) {
+      const d = Math.floor(n / 10), u = n % 10;
+      return DEZENAS[d] + (u ? ' e ' + UNIDADES[u] : '');
+    }
+    if (n === 100) return 'cem';
+    const c = Math.floor(n / 100), r = n % 100;
+    return CENTENAS[c] + (r ? ' e ' + extenso(r) : '');
+  }
+
+  const UNIDADES_PRAZO = {
+    dias: ['dia', 'dias'],
+    meses: ['mês', 'meses'],
+    anos: ['ano', 'anos'],
+  };
+
+  /** "6 (seis) meses", "1 (um) ano". Retorna '' se faltar número ou unidade. */
+  function prazoPorExtenso(n, unidade) {
+    n = parseInt(n, 10);
+    if (!n || n < 1 || !UNIDADES_PRAZO[unidade]) return '';
+    const [singular, plural] = UNIDADES_PRAZO[unidade];
+    return `${n} (${extenso(n)}) ${n === 1 ? singular : plural}`;
+  }
+
+  // ---------- Datas (formato ISO AAAA-MM-DD, sem fuso horário) ----------
+
+  function lerISO(s) {
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s || '');
+    return m ? new Date(Date.UTC(+m[1], +m[2] - 1, +m[3])) : null;
+  }
+
+  function paraISO(dt) {
+    return dt.toISOString().slice(0, 10);
+  }
+
+  const doisDigitos = (n) => String(n).padStart(2, '0');
+
+  /** "2026-10-07" -> "07/10/2026" */
+  function formatarData(iso) {
+    const dt = lerISO(iso);
+    if (!dt) return '';
+    return `${doisDigitos(dt.getUTCDate())}/${doisDigitos(dt.getUTCMonth() + 1)}/${dt.getUTCFullYear()}`;
+  }
+
+  function somarDias(iso, n) {
+    const dt = lerISO(iso);
+    if (!dt) return '';
+    dt.setUTCDate(dt.getUTCDate() + n);
+    return paraISO(dt);
+  }
+
+  /**
+   * Data final de um prazo contado a partir de `iso`, caindo no mesmo dia do mês
+   * (07/10/2026 + 6 meses = 07/04/2027). Se o dia não existir no mês final, usa o último dia.
+   */
+  function somarPrazo(iso, n, unidade) {
+    const dt = lerISO(iso);
+    n = parseInt(n, 10);
+    if (!dt || !n || !UNIDADES_PRAZO[unidade]) return '';
+    if (unidade === 'dias') return somarDias(iso, n);
+    const meses = unidade === 'anos' ? n * 12 : n;
+    const ano = dt.getUTCFullYear(), mes = dt.getUTCMonth() + meses, dia = dt.getUTCDate();
+    const ultimoDia = new Date(Date.UTC(ano, mes + 1, 0)).getUTCDate();
+    return paraISO(new Date(Date.UTC(ano, mes, Math.min(dia, ultimoDia))));
+  }
+
+  // ---------- Artigos e contrações para nomes de unidades ----------
+
+  // Palavras iniciais que pedem artigo masculino ("no Núcleo", "do Departamento").
+  // Qualquer outra palavra é tratada como feminina ("na Seção", "da Divisão").
+  const MASCULINOS = new Set([
+    'nucleo', 'departamento', 'gabinete', 'juizado', 'cartorio', 'setor', 'centro', 'servico', 'forum',
+    'grupo', 'conselho', 'tribunal', 'cejusc', 'nupemed', 'posto', 'almoxarifado', 'arquivo', 'protocolo',
+    'plenario', 'comite', 'escritorio', 'oficio', 'gtpo', 'deposito', 'laboratorio', 'programa',
+  ]);
+
+  const semAcento = (s) => s.normalize('NFD').replace(/[̀-ͯ]/g, '');
+
+  /** Detecta o artigo ('a' ou 'o') pela primeira palavra do nome da unidade. */
+  function detectarArtigo(texto) {
+    const t = (texto || '').trim();
+    if (!t) return '';
+    const palavras = t.split(/[\s/]+/);
+    let primeira = palavras[0];
+    // Ordinais: "1ª Vara", "2º Juizado"
+    if (/ª/.test(primeira)) return 'a';
+    if (/[º°]/.test(primeira)) return 'o';
+    if (/^\d+$/.test(primeira) && palavras[1]) primeira = palavras[1];
+    return MASCULINOS.has(semAcento(primeira.toLowerCase()).replace(/[^a-z]/g, '')) ? 'o' : 'a';
+  }
+
+  const CONTRACOES = {
+    em: { a: 'na', o: 'no' },
+    de: { a: 'da', o: 'do' },
+    a: { a: 'à', o: 'ao' },
+    para: { a: 'para a', o: 'para o' },
+    por: { a: 'pela', o: 'pelo' },
+  };
+
+  /** contracao('em', 'o') -> 'no' */
+  function contracao(preposicao, artigo) {
+    return CONTRACOES[preposicao][artigo === 'o' ? 'o' : 'a'];
+  }
+
+  // ---------- Texto ----------
+
+  function capitalizar(s) {
+    return s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
+  }
+
+  /** ['a', 'b', 'c'] -> 'a, b e c' */
+  function juntarLista(itens) {
+    if (itens.length <= 1) return itens.join('');
+    return itens.slice(0, -1).join(', ') + ' e ' + itens[itens.length - 1];
+  }
+
+  /** Remove prefixos como "nº", "n.", "No" digitados antes de um número. */
+  function semPrefixoNumero(s) {
+    return (s || '').trim().replace(/^n\s*[º°o.]*\s*/i, '');
+  }
+
+  function escaparHTML(s) {
+    return String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  }
+
+  return {
+    extenso, prazoPorExtenso, UNIDADES_PRAZO,
+    lerISO, formatarData, somarDias, somarPrazo,
+    detectarArtigo, contracao,
+    capitalizar, juntarLista, semPrefixoNumero, escaparHTML,
+  };
+});
+</script>
+  <script>
+/*
+ * Motor de geração: transforma (modelo + dados do formulário) em parágrafos prontos.
+ * Não depende do navegador, para poder ser testado no Node.
+ *
+ * Sintaxe usada nos textos dos modelos:
+ *   {nome}                       valor de um campo ou de um valor derivado
+ *   {do servidor|da servidora}   flexão de gênero: masculino|feminino
+ * Campo vazio vira um marcador pendente, ex.: [Nome completo], destacado na prévia.
+ */
+(function (raiz, fabrica) {
+  if (typeof module === 'object' && module.exports) module.exports = fabrica(require('./util.js'));
+  else raiz.Motor = fabrica(raiz.Util);
+})(typeof self !== 'undefined' ? self : this, function (U) {
+  'use strict';
+
+  const modelos = [];
+
+  function registrar(modelo) {
+    modelos.push(modelo);
+    return modelo;
+  }
+
+  function buscar(id) {
+    return modelos.find((m) => m.id === id);
+  }
+
+  /** Lista plana de todos os campos do modelo, na ordem em que aparecem. */
+  function campos(modelo) {
+    return modelo.secoes.flatMap((s) => s.campos);
+  }
+
+  function visivel(item, d) {
+    if (!item.se) return true;
+    try {
+      return !!item.se(d);
+    } catch (e) {
+      return false;
+    }
+  }
+
+  /** Dados do formulário + indicadores calculados pelo modelo (ex.: d.prorrogacao). */
+  function prepararDados(modelo, brutos) {
+    const d = Object.assign({}, brutos);
+    if (modelo.indicadores) Object.assign(d, modelo.indicadores(d));
+    return d;
+  }
+
+  function rotuloDoCampo(campo) {
+    return campo.rotuloPendente || campo.rotulo || campo.id;
+  }
+
+  /**
+   * Monta o contexto de substituição:
+   *  - valores: texto literal digitado pelo usuário (campos e configurações)
+   *  - derivados: textos montados pelo modelo, que podem conter outros {marcadores}
+   *  - rotulos: nome amigável de cada marcador, usado quando está pendente
+   */
+  function montarContexto(modelo, d, config) {
+    const valores = {}, derivados = {}, rotulos = {};
+
+    for (const c of modelo.configuracoes || []) rotulos[c.id] = c.rotulo;
+    Object.assign(valores, config || {});
+
+    for (const campo of campos(modelo)) {
+      const v = d[campo.id];
+      rotulos[campo.id] = rotuloDoCampo(campo);
+      switch (campo.tipo) {
+        case 'data':
+          valores[campo.id] = U.formatarData(v);
+          break;
+        case 'parecer':
+          rotulos['doc_' + campo.id] = `Nº SEI (${campo.rotulo})`;
+          valores['doc_' + campo.id] = (d['doc_' + campo.id] || '').trim();
+          break;
+        case 'lotacao': {
+          valores[campo.id] = (v || '').trim();
+          const art = d[campo.id + '_artigo'] === 'a' || d[campo.id + '_artigo'] === 'o'
+            ? d[campo.id + '_artigo'] : (U.detectarArtigo(v) || 'a');
+          for (const prep of ['em', 'de', 'a', 'para']) {
+            derivados[`${campo.id}_${prep}`] = `${U.contracao(prep, art)} {${campo.id}}`;
+          }
+          break;
+        }
+        case 'checkbox':
+          break;
+        default:
+          valores[campo.id] = typeof v === 'string' ? v.trim() : (v == null ? '' : String(v));
+      }
+    }
+
+    Object.assign(rotulos, modelo.rotulos || {});
+    if (modelo.derivar) Object.assign(derivados, modelo.derivar(d, U));
+
+    return { valores, derivados, rotulos, genero: d.genero };
+  }
+
+  const tem = (obj, k) => Object.prototype.hasOwnProperty.call(obj, k);
+
+  /** Substitui os marcadores e devolve uma lista de segmentos {texto} ou {pendente, exibir}. */
+  function interpolar(modeloTexto, ctx, profundidade) {
+    profundidade = profundidade || 0;
+    const segs = [];
+    const re = /\{([^{}]+)\}/g;
+    let ultimo = 0, m;
+    while ((m = re.exec(modeloTexto))) {
+      if (m.index > ultimo) segs.push({ texto: modeloTexto.slice(ultimo, m.index) });
+      ultimo = re.lastIndex;
+      const chave = m[1];
+
+      if (chave.includes('|')) {
+        const [masc, fem] = chave.split('|');
+        if (ctx.genero === 'm') segs.push({ texto: masc });
+        else if (ctx.genero === 'f') segs.push({ texto: fem });
+        else segs.push({ pendente: 'Gênero', exibir: `${masc}/${fem}` });
+        continue;
+      }
+
+      const nome = chave.trim();
+      const rotulo = ctx.rotulos[nome] || nome;
+      if (tem(ctx.derivados, nome)) {
+        const v = ctx.derivados[nome];
+        if (v === null || v === undefined) segs.push({ pendente: rotulo });
+        else if (profundidade < 5) segs.push(...interpolar(String(v), ctx, profundidade + 1));
+      } else if (tem(ctx.valores, nome) && ctx.valores[nome] !== '') {
+        segs.push({ texto: String(ctx.valores[nome]) });
+      } else {
+        segs.push({ pendente: rotulo });
+      }
+    }
+    if (ultimo < modeloTexto.length) segs.push({ texto: modeloTexto.slice(ultimo) });
+    return segs;
+  }
+
+  function percorrerBlocos(blocos, d, ctx, saida) {
+    for (const bloco of blocos) {
+      if (!visivel(bloco, d)) continue;
+      if (bloco.blocos) {
+        percorrerBlocos(bloco.blocos, d, ctx, saida);
+        continue;
+      }
+      const tipo = bloco.tipo || 'p';
+      const texto = typeof bloco.texto === 'function' ? bloco.texto(d) : (bloco.texto || '');
+      saida.push({ tipo, segs: tipo === 'vazio' ? [] : interpolar(texto, ctx) });
+    }
+  }
+
+  /**
+   * Gera um documento do modelo.
+   * @returns {{ blocos: Array<{tipo, segs}>, pendentes: string[] }}
+   */
+  function gerar(modelo, docId, brutos, config) {
+    const doc = modelo.documentos.find((x) => x.id === docId);
+    const d = prepararDados(modelo, brutos);
+    const ctx = montarContexto(modelo, d, config);
+    const blocos = [];
+    percorrerBlocos(doc.blocos, d, ctx, blocos);
+    const pendentes = [];
+    for (const b of blocos) {
+      for (const s of b.segs) {
+        if (s.pendente && !pendentes.includes(s.pendente)) pendentes.push(s.pendente);
+      }
+    }
+    return { blocos, pendentes };
+  }
+
+  function avisos(modelo, brutos) {
+    if (!modelo.avisos) return [];
+    return modelo.avisos(prepararDados(modelo, brutos), U) || [];
+  }
+
+  // ---------- Saídas ----------
+
+  const textoDoPendente = (s) => `[${s.exibir || s.pendente}]`;
+
+  function segsParaHTML(segs, marcar) {
+    return segs.map((s) => (s.pendente ? marcar(s) : U.escaparHTML(s.texto))).join('');
+  }
+
+  /** HTML da prévia na tela (classes CSS locais). */
+  function htmlPrevia(resultado) {
+    return resultado.blocos.map((b) => {
+      const conteudo = b.tipo === 'vazio' ? '&nbsp;' : segsParaHTML(b.segs, (s) =>
+        `<mark class="pendente" title="Campo pendente: ${U.escaparHTML(s.pendente)}">${U.escaparHTML(textoDoPendente(s))}</mark>`);
+      return `<p class="sei-${b.tipo}">${conteudo}</p>`;
+    }).join('\n');
+  }
+
+  /**
+   * HTML para colar no editor do SEI: cada parágrafo recebe a classe de estilo do SEI
+   * (ex.: Texto_Justificado_Recuo_Primeira_Linha) e, opcionalmente, o estilo equivalente inline.
+   */
+  function htmlSEI(resultado, estilos, incluirInline) {
+    return resultado.blocos.map((b) => {
+      const est = estilos[b.tipo] || estilos.p;
+      const attrs = `class="${est.classe}"` + (incluirInline && est.inline ? ` style="${est.inline}"` : '');
+      const conteudo = b.tipo === 'vazio' ? '&nbsp;' : segsParaHTML(b.segs, (s) =>
+        `<span style="background-color:#ffff00">${U.escaparHTML(textoDoPendente(s))}</span>`);
+      return `<p ${attrs}>${conteudo}</p>`;
+    }).join('\n');
+  }
+
+  /** Texto simples, um parágrafo por bloco, separados por linha em branco. */
+  function textoSimples(resultado) {
+    return resultado.blocos
+      .filter((b) => b.tipo !== 'vazio')
+      .map((b) => b.segs.map((s) => (s.pendente ? textoDoPendente(s) : s.texto)).join(''))
+      .join('\n\n');
+  }
+
+  return {
+    modelos, registrar, buscar, campos, visivel, prepararDados,
+    gerar, avisos, interpolar, htmlPrevia, htmlSEI, textoSimples,
+  };
+});
+</script>
+  <script>
+/*
+ * Configurações gerais.
+ *
+ * estilosSEI: estilo de parágrafo do editor do SEI aplicado a cada tipo de bloco dos modelos.
+ * Os nomes de classe são os padrões do SEI; o "inline" reproduz a mesma formatação, para o caso
+ * de o editor descartar as classes ao colar.
+ */
+(function (raiz, fabrica) {
+  if (typeof module === 'object' && module.exports) module.exports = fabrica();
+  else raiz.AssessorConfig = fabrica();
+})(typeof self !== 'undefined' ? self : this, function () {
+  'use strict';
+
+  const PARAGRAFO = {
+    classe: 'Texto_Justificado_Recuo_Primeira_Linha',
+    inline: 'font-size:12pt;font-family:Calibri;text-indent:25mm;text-align:justify;word-wrap:normal;margin:6pt;',
+  };
+
+  return {
+    estilosSEI: {
+      p: PARAGRAFO,
+      alinea: PARAGRAFO,
+      vazio: PARAGRAFO,
+      vocativo: {
+        classe: 'Texto_Alinhado_Esquerda',
+        inline: 'font-size:12pt;font-family:Calibri;text-align:left;word-wrap:normal;margin:6pt;',
+      },
+      citacao: {
+        classe: 'Citacao',
+        inline: 'font-size:10pt;font-family:Calibri;word-wrap:normal;margin:4pt 0 4pt 160px;text-align:justify;',
+      },
+    },
+  };
+});
+</script>
+  <!-- Modelos: para criar um novo assunto, adicione um arquivo em modelos/ e inclua aqui. -->
+  <script>
+/*
+ * Modelo: Readaptação por motivo de saúde (concessão e prorrogação).
+ *
+ * Como editar os textos: veja a seção "Editando os modelos" do README.
+ *   {campo}                      valor digitado no formulário (ou derivado, ver `derivar`)
+ *   {do servidor|da servidora}   masculino|feminino, conforme o gênero escolhido
+ *   se: d => ...                 o parágrafo só entra quando a condição é verdadeira
+ *   tipo: 'citacao' | 'alinea' | 'vocativo' | 'vazio'   (padrão: parágrafo comum)
+ */
+(function () {
+  'use strict';
+
+  const UNIDADES = [['meses', 'meses'], ['anos', 'ano(s)'], ['dias', 'dias']];
+
+  // ---------- Trechos compartilhados entre despacho e decisão ----------
+
+  const INTRODUCAO = 'Trata-se da {pedido} de readaptação, por problemas de saúde, {do servidor|da servidora} {nome}, '
+    + 'cadastro {cadastro}, {cargo}, {lotado|lotada} {lotacao_em}.';
+
+  const LAUDO_NUPEMED = 'Após avaliação de seu quadro de saúde, o Nupemed emitiu laudo ({doc_nupemed}) favorável {favoravel_a}, '
+    + 'pelo prazo de {prazo}, {modalidade}, no período de {inicio} a {fim}. Os laudos e/ou exames médicos, que subsidiaram '
+    + 'essa análise, por se tratarem de dados pessoais sensíveis, encontram-se arquivados no Nupemed, em observância aos '
+    + 'preceitos da Lei n. 13.709/2018 (LGPD).';
+
+  // Avaliação do posto de trabalho (Sebio/SST) e conclusão do GTPO, conforme a combinação marcada.
+  const PARECERES = [
+    { se: (d) => d.temPosto && !d.gtpo,
+      texto: '{posto_frase}, mantendo sua lotação atual.' },
+    { se: (d) => d.temPosto && d.gtpo && d.concessao && d.manter,
+      texto: '{posto_frase}. Ademais, o GTPO concluiu pela permanência {do servidor|da servidora} em sua atual unidade '
+        + 'de lotação ({doc_gtpo}).' },
+    { se: (d) => d.temPosto && d.gtpo && !(d.concessao && d.manter),
+      texto: '{posto_frase}.' },
+    { se: (d) => !d.temPosto && d.gtpo && d.concessao && d.manter,
+      texto: 'O GTPO concluiu pela permanência {do servidor|da servidora} em sua atual unidade de lotação ({doc_gtpo}).' },
+    { se: (d) => d.gtpo && d.concessao && d.relotar,
+      texto: 'O GTPO concluiu pela necessidade de concessão da readaptação {do servidor|da servidora}, devido a sua '
+        + 'condição de saúde, com relotação {nova_lotacao_em}, a partir de {data_relotacao} ({doc_gtpo}).' },
+    { se: (d) => d.gtpo && d.prorrogacao && d.manter,
+      texto: 'O GTPO concluiu pela necessidade de prorrogação da readaptação {do servidor|da servidora} ({doc_gtpo}), '
+        + '{manutencao_tele}devido a sua condição de saúde, mantendo sua lotação {lotacao_em}.' },
+    { se: (d) => d.gtpo && d.prorrogacao && d.relotar,
+      texto: 'O GTPO concluiu pela necessidade de prorrogação da readaptação {do servidor|da servidora}, '
+        + '{manutencao_tele}devido a sua condição de saúde, com relotação {nova_lotacao_em}, a partir de '
+        + '{data_relotacao} ({doc_gtpo}).' },
+  ];
+
+  const LC_68 = [
+    { texto: 'O instituto legal da readaptação encontra-se previsto nos seguintes dispositivos da LC 68/92, que dispõe '
+      + 'sobre o Regime Jurídico dos Servidores Civis do Estado:' },
+    { tipo: 'citacao', texto: 'Art. 11. São formas de provimento de cargo público:' },
+    { tipo: 'citacao', texto: '[...]' },
+    { tipo: 'citacao', texto: 'III - readaptação;' },
+    { tipo: 'citacao', texto: '[...]' },
+    { tipo: 'citacao', texto: 'Art. 31. Readaptação é a investidura do servidor em cargo de atribuições e '
+      + 'responsabilidades compatíveis com a limitação que tenha sofrido em sua capacidade física ou mental verificada '
+      + 'em inspeção médica.' },
+    { tipo: 'citacao', texto: '§ 1º Se julgado incapaz para o serviço público, o readaptado será aposentado.' },
+    { tipo: 'citacao', texto: '§ 2º A readaptação será efetivada em cargo de atribuições afins, respeitada a '
+      + 'habilitação exigida.' },
+  ];
+
+  const INSTRUCAO_108 = [
+    { texto: 'No âmbito deste Poder, a readaptação encontra-se regulamentada pela Instrução Nº 108, de 19/04/2023. '
+      + 'Vejamos:' },
+    { tipo: 'citacao', texto: 'Art. 1º Os procedimentos e rotinas quanto à readaptação de função dos(as) '
+      + 'servidores(as) do Poder Judiciário do Estado de Rondônia, prevista na Lei complementar n. 68, de 9/12/1992, '
+      + 'serão disciplinados por esta Instrução.' },
+    { tipo: 'citacao', texto: 'CAPÍTULO I' },
+    { tipo: 'citacao', texto: 'DA CONCESSÃO DA READAPTAÇÃO' },
+    { tipo: 'citacao', texto: 'Art. 2º A readaptação funcional é a investidura do(a) servidor(a) em outras '
+      + 'atribuições e responsabilidades compatíveis com a sua condição de saúde, sem que haja mudança de cargo, '
+      + 'quando há modificações do seu estado físico ou psíquico que acarretem limitações da sua capacidade funcional, '
+      + 'conforme avaliação pericial.' },
+    { tipo: 'citacao', texto: '§ 1º A readaptação de função obedecerá às seguintes condições:' },
+    { tipo: 'citacao', texto: 'I - as atribuições e responsabilidades deverão ser compatíveis com a limitação que '
+      + 'tenha sofrido em sua capacidade física ou mental, verificada em inspeção pelo Núcleo de Perícias Médicas '
+      + '(Nupemed) deste Poder;' },
+    { tipo: 'citacao', texto: 'II - a readaptação será efetivada em cargo de atribuições afins, respeitada a '
+      + 'habilitação exigida, com a mesma carga horária;' },
+    { tipo: 'citacao', texto: '§ 2º A readaptação poderá ser solicitada pelo(a) próprio(a) servidor(a) à Divisão de '
+      + 'Saúde (Disau) ou ser concedida por iniciativa do Nupemed.' },
+    { tipo: 'citacao', texto: '§ 3º Prioritariamente, o período de readaptação indicado pelo Nupemed deverá ocorrer '
+      + 'na própria unidade de lotação do(a) servidor(a).' },
+    { tipo: 'citacao', texto: '§ 4º A data de início do período de readaptação será indicada pela Seção '
+      + 'Biopsicossocial (Sebio), Divisão de Acompanhamento, Desenvolvimento de Carreiras (Diadec) ou pelo Nupemed.' },
+    { tipo: 'citacao', texto: 'Art. 3º Cabem às unidades envolvidas no processo de readaptação as seguintes '
+      + 'responsabilidades:' },
+    { tipo: 'citacao', texto: 'I - à Disau, iniciar o processo e encaminhar para avaliação do Nupemed que, após '
+      + 'emissão do parecer, encaminhará para ciência da chefia imediata e/ou Sebio e Diadec;' },
+    { tipo: 'citacao', texto: 'II - ao Nupemed, efetuar a avaliação pericial, por meio da qual certificará a redução '
+      + 'da capacidade funcional parcial e/ou definitiva do(a) servidor(a) considerando seu desempenho e suas condições '
+      + 'de trabalho;' },
+    { tipo: 'citacao', texto: 'III - à Sebio, orientar quanto às atividades que não deverão ser executadas, '
+      + 'registrando as limitações da capacidade laborativa de saúde física em laudo consubstanciado e realizar o '
+      + 'acompanhamento do(a) servidor(a) até findar o prazo da readaptação;' },
+    { tipo: 'citacao', texto: 'IV - à Diadec, realizar avaliação psicológica organizacional com vistas a subsidiar a '
+      + 'permanência do(a) servidor(a) na unidade de lotação atual ou se haverá necessidade de relotação, bem como '
+      + 'orientar servidor(a) e gestor(a) quanto às limitações de saúde mental no desempenho funcional do(a) '
+      + 'servidor(a) readaptado(a) e realizar o acompanhamento do(a) servidor(a) até findar o prazo da readaptação;' },
+    { tipo: 'citacao', texto: '[...]' },
+  ];
+
+  const TELETRABALHO = [
+    { texto: '{O servidor|A servidora}, enquanto estiver em teletrabalho, nos termos do {ato_teletrabalho}, deverá:' },
+    { tipo: 'alinea', texto: 'a) manter acesso remoto, contínuo e funcional aos sistemas necessários à execução de '
+      + 'suas atribuições, com acompanhamento das atividades da unidade de lotação;' },
+    { tipo: 'alinea', texto: 'b) pactuar previamente com a chefia imediata a rotina de trabalho, bem como as metas a '
+      + 'serem alcançadas, cuja aferição de produtividade caberá à própria chefia;' },
+    { tipo: 'alinea', texto: 'c) comparecer presencialmente à unidade de lotação sempre que {convocado|convocada}, '
+      + 'sendo as despesas de deslocamento de sua inteira responsabilidade;' },
+    { tipo: 'alinea', texto: 'd) preservar o sigilo dos dados acessados de forma remota, mediante observância das '
+      + 'normas internas de segurança da informação e da comunicação, bem como manter atualizados os sistemas '
+      + 'institucionais instalados nos equipamentos de trabalho;' },
+    { tipo: 'alinea', texto: 'e) submeter-se à realização de exame periódico anual, preferencialmente no mês de seu '
+      + 'aniversário.' },
+  ];
+
+  // ---------- Modelo ----------
+
+  Motor.registrar({
+    id: 'readaptacao',
+    nome: 'Readaptação por motivo de saúde',
+
+    // Valores fixos que mudam de tempos em tempos; editáveis em "Configurações" na tela.
+    configuracoes: [
+      { id: 'vocativo', rotulo: 'Vocativo do despacho', padrao: 'Excelentíssima Juíza Secretária Geral,' },
+      { id: 'ato_delegacao', rotulo: 'Delegação (decisão)', padrao: 'art. 2º do Ato 57/2026' },
+      { id: 'decisao_produtividade', rotulo: 'Decisão da média da produtividade', padrao: 'Decisão 2063 (5546695)' },
+      { id: 'ato_teletrabalho', rotulo: 'Norma do teletrabalho', padrao: 'art. 6º do Ato nº 1313/2025' },
+    ],
+
+    secoes: [
+      {
+        titulo: 'Pedido',
+        campos: [
+          { id: 'pedido', tipo: 'opcoes', rotulo: 'Tipo de pedido', padrao: 'concessao',
+            opcoes: [['concessao', 'Concessão'], ['prorrogacao', 'Prorrogação']] },
+        ],
+      },
+      {
+        titulo: 'Servidor(a)',
+        campos: [
+          { id: 'genero', tipo: 'opcoes', rotulo: 'Gênero', opcoes: [['f', 'Servidora'], ['m', 'Servidor']] },
+          { id: 'nome', tipo: 'texto', rotulo: 'Nome completo', largura: 4 },
+          { id: 'cadastro', tipo: 'texto', rotulo: 'Cadastro', largura: 1, modoTeclado: 'numeric' },
+          { id: 'cargo', tipo: 'texto', rotulo: 'Cargo', largura: 3,
+            sugestoes: ['Técnico Judiciário', 'Técnica Judiciária', 'Analista Judiciário', 'Analista Judiciária',
+              'Oficial de Justiça', 'Agente Judiciário', 'Agente Judiciária', 'Auxiliar Operacional'] },
+          { id: 'oficial', tipo: 'checkbox', largura: 4,
+            rotulo: 'Oficial de Justiça: incluir parágrafo da média da produtividade (decisão)',
+            auto: (d) => /oficial\s+de\s+justi/i.test(d.cargo || '') },
+          { id: 'lotacao', tipo: 'lotacao', rotulo: 'Lotação atual', largura: 4 },
+        ],
+      },
+      {
+        titulo: 'Readaptação anterior',
+        se: (d) => d.prorrogacao,
+        campos: [
+          { id: 'ant_prazo_n', tipo: 'numero', rotulo: 'Prazo', largura: 1 },
+          { id: 'ant_prazo_unidade', tipo: 'opcoes', estilo: 'lista', rotulo: 'Unidade', opcoes: UNIDADES, largura: 1 },
+          { id: 'ant_inicio', tipo: 'data', rotulo: 'Início', largura: 1 },
+          { id: 'ant_fim', tipo: 'data', rotulo: 'Fim', largura: 1,
+            auto: (d, U) => U.somarPrazo(d.ant_inicio, d.ant_prazo_n, d.ant_prazo_unidade) },
+          { id: 'portaria', tipo: 'texto', rotulo: 'Portaria Presidência (nº/ano)', placeholder: 'ex.: 1234/2025', largura: 2 },
+          { id: 'doc_portaria', tipo: 'sei', rotulo: 'Nº SEI da Portaria', largura: 2 },
+        ],
+      },
+      {
+        titulo: 'Laudo do Nupemed',
+        campos: [
+          { id: 'doc_nupemed', tipo: 'sei', rotulo: 'Nº SEI do laudo', largura: 2 },
+          { id: 'modalidade', tipo: 'opcoes', rotulo: 'Condição', largura: 4,
+            opcoes: [['atuais', 'Nas atuais condições'], ['teletrabalho', 'Em teletrabalho']] },
+          { id: 'prazo_n', tipo: 'numero', rotulo: 'Prazo', largura: 1 },
+          { id: 'prazo_unidade', tipo: 'opcoes', estilo: 'lista', rotulo: 'Unidade', opcoes: UNIDADES, largura: 1 },
+          { id: 'inicio', tipo: 'data', rotulo: 'Início', largura: 1,
+            auto: (d, U) => (d.prorrogacao ? U.somarDias(d.ant_fim, 1) : undefined) },
+          { id: 'fim', tipo: 'data', rotulo: 'Fim', largura: 1,
+            auto: (d, U) => U.somarPrazo(d.inicio, d.prazo_n, d.prazo_unidade) },
+        ],
+      },
+      {
+        titulo: 'Avaliações e lotação',
+        campos: [
+          { id: 'sebio', tipo: 'parecer', rotulo: 'Sebio', descricao: 'laudo de avaliação do posto de trabalho' },
+          { id: 'sst', tipo: 'parecer', rotulo: 'SST', descricao: 'laudo de avaliação do posto de trabalho' },
+          { id: 'gtpo', tipo: 'parecer', rotulo: 'GTPO', descricao: 'conclusão/relatório',
+            auto: (d) => (d.relotar ? true : undefined) },
+          { id: 'destino', tipo: 'opcoes', rotulo: 'Lotação', padrao: 'manter', largura: 4,
+            opcoes: [['manter', 'Mantém a lotação atual'], ['relotar', 'Relotação']] },
+          { id: 'nova_lotacao', tipo: 'lotacao', rotulo: 'Nova lotação', largura: 3, se: (d) => d.relotar },
+          { id: 'data_relotacao', tipo: 'data', rotulo: 'A partir de', largura: 1, se: (d) => d.relotar },
+        ],
+      },
+      {
+        titulo: 'Encaminhamento',
+        campos: [
+          { id: 'doc_sgp', tipo: 'sei', rotulo: 'Nº SEI do despacho da SGP', dica: 'só na decisão', largura: 3 },
+        ],
+      },
+    ],
+
+    // Atalhos usados nas condições `se:` e em `derivar`.
+    indicadores: (d) => ({
+      concessao: d.pedido !== 'prorrogacao',
+      prorrogacao: d.pedido === 'prorrogacao',
+      teletrabalho: d.modalidade === 'teletrabalho',
+      relotar: d.destino === 'relotar',
+      manter: d.destino !== 'relotar',
+      temPosto: !!(d.sebio || d.sst),
+    }),
+
+    // Trechos calculados. null = informação faltando (aparece como pendente); '' = trecho omitido.
+    derivar(d, U) {
+      const posto = [];
+      if (d.sebio) posto.push('a Sebio ({doc_sebio})');
+      if (d.sst) posto.push('a SST ({doc_sst})');
+      return {
+        pedido: d.prorrogacao ? 'prorrogação' : 'concessão',
+        favoravel_a: d.prorrogacao ? 'à prorrogação de sua readaptação' : 'à sua readaptação',
+        prazo: U.prazoPorExtenso(d.prazo_n, d.prazo_unidade) || null,
+        prazo_anterior: U.prazoPorExtenso(d.ant_prazo_n, d.ant_prazo_unidade) || null,
+        modalidade: d.teletrabalho ? 'em teletrabalho' : d.modalidade === 'atuais' ? 'nas atuais condições' : null,
+        em_teletrabalho: d.teletrabalho ? 'em teletrabalho, ' : '',
+        manutencao_tele: d.teletrabalho ? 'com a manutenção do teletrabalho, ' : '',
+        mantendo_lotacao: d.manter ? ', mantendo sua lotação atual' : '',
+        posto_frase: posto.length
+          ? U.capitalizar(U.juntarLista(posto)) + (posto.length > 1 ? ' apresentaram' : ' apresentou')
+            + ' laudo de avaliação do posto de trabalho'
+          : '',
+        portaria_ref: d.portaria ? U.semPrefixoNumero(d.portaria) : null,
+        analise_docs: d.gtpo
+          ? 'o devido parecer do Nupemed ({doc_nupemed}) e a recomendação do GTPO ({doc_gtpo}), os quais são favoráveis'
+          : 'o devido parecer do Nupemed ({doc_nupemed}), o qual é favorável',
+      };
+    },
+
+    rotulos: {
+      prazo: 'Prazo do laudo',
+      prazo_anterior: 'Prazo anterior',
+      modalidade: 'Condição',
+      portaria_ref: 'Nº da Portaria',
+    },
+
+    avisos(d, U) {
+      const a = [];
+      if (d.relotar && !d.gtpo) a.push('Relotação sem GTPO marcado: os parágrafos de relotação dependem do relatório do GTPO.');
+      if (d.inicio && d.fim && d.fim <= d.inicio) a.push('A data final do período é anterior ou igual à inicial.');
+      if (d.prorrogacao && d.ant_fim && d.inicio && U.somarDias(d.ant_fim, 1) !== d.inicio) {
+        a.push('O novo período não começa no dia seguinte ao fim da readaptação anterior.');
+      }
+      if (d.relotar && d.data_relotacao && d.inicio && d.fim && (d.data_relotacao < d.inicio || d.data_relotacao > d.fim)) {
+        a.push('A data da relotação está fora do período da readaptação.');
+      }
+      return a;
+    },
+
+    // Dados fictícios para o botão "Preencher exemplo".
+    exemplo: {
+      pedido: 'concessao', genero: 'f', nome: 'Fulana de Tal', cadastro: '000000', cargo: 'Técnica Judiciária',
+      lotacao: 'Seção de Admissão e Movimentação de Pessoal/SGP', doc_nupemed: '0000001', modalidade: 'teletrabalho',
+      prazo_n: '6', prazo_unidade: 'meses', inicio: '2026-10-07', fim: '2027-04-07', gtpo: true, doc_gtpo: '0000002',
+      destino: 'relotar', nova_lotacao: 'Seção de Registro e Controle de Benefícios', data_relotacao: '2026-10-19',
+      doc_sgp: '0000003',
+    },
+
+    documentos: [
+      {
+        id: 'despacho',
+        nome: 'Despacho',
+        blocos: [
+          { tipo: 'vocativo', texto: '{vocativo}' },
+          { tipo: 'vazio' },
+          { texto: INTRODUCAO },
+          { se: (d) => d.prorrogacao,
+            texto: '{O servidor|A servidora} estava {readaptado|readaptada} por {prazo_anterior}, no período de '
+              + '{ant_inicio} a {ant_fim}, conforme Portaria Presidência {portaria_ref} ({doc_portaria}).' },
+          { texto: LAUDO_NUPEMED },
+          { blocos: PARECERES },
+          { texto: 'Diante do exposto, instruídos os autos, encaminhamos para deliberação de Vossa Excelência.' },
+          { tipo: 'vazio' },
+          { texto: 'Respeitosamente,' },
+        ],
+      },
+      {
+        id: 'decisao',
+        nome: 'Decisão',
+        blocos: [
+          { texto: INTRODUCAO },
+          { se: (d) => d.prorrogacao,
+            texto: '{O servidor|A servidora} esteve {readaptado|readaptada} pelo prazo de {prazo_anterior}, no período de '
+              + '{ant_inicio} a {ant_fim}, conforme Portaria Presidência {portaria_ref} ({doc_portaria}).' },
+          { texto: LAUDO_NUPEMED },
+          { blocos: PARECERES },
+          { texto: 'A Secretaria de Gestão de Pessoas encaminhou os autos para deliberação ({doc_sgp}).' },
+          { tipo: 'vazio' },
+          { texto: 'Examinados, decido.' },
+          { blocos: LC_68 },
+          { blocos: INSTRUCAO_108 },
+          { texto: 'Da análise dos autos, verifica-se que os requisitos estabelecidos foram atendidos, uma vez que consta '
+            + '{analise_docs} à {pedido} da readaptação {do servidor|da servidora}. Ademais, periodicamente são '
+            + 'realizadas avaliações com intuito de averiguar se a readaptação está condizente com as limitações '
+            + '{do servidor|da servidora}, bem como o desempenho do labor na unidade.' },
+          { texto: 'Ante o exposto, no uso das atribuições concedidas pelo {ato_delegacao}, com fulcro no art. 31 da Lei '
+            + 'Complementar n. 68/92, bem como no art. 2º da Instrução Nº 108, de 19/04/2023, defiro a {pedido} da '
+            + 'readaptação {do servidor|da servidora} {nome}, cadastro {cadastro}, {cargo}, {em_teletrabalho}pelo prazo de '
+            + '{prazo}, no período de {inicio} a {fim}{mantendo_lotacao}.' },
+          { se: (d) => d.relotar,
+            texto: 'Ainda, determino que {o servidor|a servidora} seja {relotado|relotada} {lotacao_de} {nova_lotacao_para}, '
+              + 'a partir de {data_relotacao}, nos termos do relatório do GTPO ({doc_gtpo}).' },
+          { se: (d) => d.oficial,
+            texto: 'Quanto ao pagamento da média da produtividade, nos termos da {decisao_produtividade}, '
+              + '{o servidor|a servidora} faz jus ao pagamento da média da produtividade, durante o período de readaptação.' },
+          { se: (d) => d.teletrabalho, blocos: TELETRABALHO },
+          { texto: 'Findo o prazo, caso haja a necessidade de prorrogação, {o servidor|a servidora} deverá apresentar novo '
+            + 'laudo e ser {submetido|submetida} a avaliação médica.' },
+          { texto: 'À SGP para providenciar o necessário.' },
+        ],
+      },
+    ],
+  });
+})();
+</script>
+  <script>
+/*
+ * Interface: monta o formulário a partir do modelo escolhido, atualiza a prévia a cada
+ * alteração e copia o resultado. Os dados digitados não são gravados em lugar nenhum;
+ * só as configurações (vocativo, atos etc.) ficam salvas no navegador.
+ */
+(function () {
+  'use strict';
+
+  const U = window.Util, M = window.Motor, CFG = window.AssessorConfig;
+  const CHAVE_PREFERENCIAS = 'assessorSEI.preferencias.v1';
+
+  const $ = (sel, raiz) => (raiz || document).querySelector(sel);
+
+  function el(tag, attrs, ...filhos) {
+    const e = document.createElement(tag);
+    for (const [k, v] of Object.entries(attrs || {})) {
+      if (v === undefined || v === null || v === false) continue;
+      if (k === 'class') e.className = v;
+      else if (k === 'dataset') Object.assign(e.dataset, v);
+      else if (k in e && typeof v !== 'string') e[k] = v;
+      else e.setAttribute(k, v === true ? '' : v);
+    }
+    for (const f of filhos) if (f !== null && f !== undefined) e.append(f);
+    return e;
+  }
+
+  const form = $('#formulario');
+
+  const estado = {
+    modelo: null,
+    docId: null,
+    manuais: new Set(), // campos automáticos que o usuário editou à mão
+    calculados: new Set(), // campos cujo valor atual veio do cálculo automático
+    resultado: null,
+  };
+
+  // ---------- Preferências (só configurações, nunca dados do processo) ----------
+
+  function lerPreferencias() {
+    try {
+      return Object.assign({ inline: true, valores: {} }, JSON.parse(localStorage.getItem(CHAVE_PREFERENCIAS)) || {});
+    } catch (e) {
+      return { inline: true, valores: {} };
+    }
+  }
+
+  const preferencias = lerPreferencias();
+
+  function salvarPreferencias() {
+    try {
+      localStorage.setItem(CHAVE_PREFERENCIAS, JSON.stringify(preferencias));
+    } catch (e) { /* navegador sem armazenamento: segue só nesta sessão */ }
+  }
+
+  function valoresConfiguracao() {
+    const salvos = preferencias.valores[estado.modelo.id] || {};
+    const v = {};
+    for (const c of estado.modelo.configuracoes || []) v[c.id] = c.id in salvos ? salvos[c.id] : c.padrao;
+    return v;
+  }
+
+  // ---------- Formulário ----------
+
+  const LARGURA_PADRAO = { opcoes: 4, checkbox: 4, parecer: 4, lotacao: 4, texto: 2, sei: 2, numero: 1, data: 1 };
+
+  const campoPorId = (id) => M.campos(estado.modelo).find((c) => c.id === id);
+
+  function linhaRotulo(c, paraId) {
+    return el('div', { class: 'rotulo' },
+      paraId ? el('label', { for: paraId }, c.rotulo) : el('span', {}, c.rotulo),
+      el('span', { class: 'dica', id: 'dica-' + c.id }, c.dica || ''));
+  }
+
+  function criarCampo(c) {
+    const id = 'f-' + c.id;
+    const wrap = el('div', { class: 'campo l' + (c.largura || LARGURA_PADRAO[c.tipo] || 2), dataset: { campo: c.id } });
+
+    switch (c.tipo) {
+      case 'opcoes':
+        if (c.estilo === 'lista') {
+          const sel = el('select', { id }, el('option', { value: '' }, '—'));
+          for (const [valor, rotulo] of c.opcoes) sel.append(el('option', { value: valor }, rotulo));
+          wrap.append(linhaRotulo(c, id), sel);
+        } else {
+          const grupo = el('div', { class: 'segmentado', role: 'radiogroup', 'aria-label': c.rotulo });
+          for (const [valor, rotulo] of c.opcoes) {
+            grupo.append(el('label', {}, el('input', { type: 'radio', name: id, value: valor }), el('span', {}, rotulo)));
+          }
+          wrap.append(linhaRotulo(c), grupo);
+        }
+        break;
+
+      case 'checkbox':
+        wrap.append(el('label', { class: 'campo-check' }, el('input', { type: 'checkbox', id }), el('span', {}, c.rotulo)),
+          el('span', { class: 'dica', id: 'dica-' + c.id }));
+        break;
+
+      case 'parecer':
+        wrap.append(el('div', { class: 'parecer' },
+          el('label', { class: 'campo-check' },
+            el('input', { type: 'checkbox', id }),
+            el('span', {}, el('strong', {}, c.rotulo), el('span', { class: 'descricao' }, ' — ' + (c.descricao || '')),
+              ' ', el('span', { class: 'dica', id: 'dica-' + c.id }))),
+          el('input', { type: 'text', id: 'f-doc_' + c.id, inputmode: 'numeric', placeholder: 'nº SEI',
+            'aria-label': `Nº SEI (${c.rotulo})` })));
+        break;
+
+      case 'lotacao': {
+        const art = el('select', { id: id + '_artigo', 'aria-label': 'Artigo da unidade', title: 'Artigo usado antes do nome da unidade' },
+          el('option', { value: '' }, 'auto'), el('option', { value: 'a' }, 'na / da'), el('option', { value: 'o' }, 'no / do'));
+        wrap.append(linhaRotulo(c, id),
+          el('div', { class: 'linha-composta' }, el('input', { type: 'text', id, placeholder: c.dica || '' }), art));
+        break;
+      }
+
+      default: {
+        const attrs = { id, type: 'text' };
+        if (c.tipo === 'data') attrs.type = 'date';
+        if (c.tipo === 'numero') Object.assign(attrs, { type: 'number', min: '1', step: '1', inputmode: 'numeric' });
+        if (c.tipo === 'sei') Object.assign(attrs, { inputmode: 'numeric', placeholder: 'nº SEI' });
+        if (c.modoTeclado) attrs.inputmode = c.modoTeclado;
+        if (c.placeholder) attrs.placeholder = c.placeholder;
+        const input = el('input', attrs);
+        wrap.append(linhaRotulo(c, id), input);
+        if (c.sugestoes) {
+          input.setAttribute('list', 'lista-' + c.id);
+          wrap.append(el('datalist', { id: 'lista-' + c.id }, ...c.sugestoes.map((s) => el('option', { value: s }))));
+        }
+      }
+    }
+    return wrap;
+  }
+
+  function renderizarFormulario() {
+    form.innerHTML = '';
+    estado.modelo.secoes.forEach((secao, i) => {
+      const grade = el('div', { class: 'grade' }, ...secao.campos.map(criarCampo));
+      form.append(el('fieldset', { class: 'secao', dataset: { secao: String(i) } }, el('legend', {}, secao.titulo), grade));
+    });
+    aplicarPadroes();
+  }
+
+  function aplicarPadroes() {
+    for (const c of M.campos(estado.modelo)) definirValor(c, c.padrao !== undefined ? c.padrao : '');
+    for (const c of M.campos(estado.modelo)) {
+      if (c.tipo === 'parecer') $('#f-doc_' + c.id).value = '';
+      if (c.tipo === 'lotacao') $('#f-' + c.id + '_artigo').value = '';
+    }
+  }
+
+  function coletar() {
+    const d = {};
+    for (const c of M.campos(estado.modelo)) {
+      const id = 'f-' + c.id;
+      switch (c.tipo) {
+        case 'opcoes':
+          if (c.estilo === 'lista') d[c.id] = $('#' + id).value;
+          else {
+            const r = form.querySelector(`input[name="${id}"]:checked`);
+            d[c.id] = r ? r.value : '';
+          }
+          break;
+        case 'checkbox':
+          d[c.id] = $('#' + id).checked;
+          break;
+        case 'parecer':
+          d[c.id] = $('#' + id).checked;
+          d['doc_' + c.id] = $('#f-doc_' + c.id).value;
+          break;
+        case 'lotacao':
+          d[c.id] = $('#' + id).value;
+          d[c.id + '_artigo'] = $('#' + id + '_artigo').value;
+          break;
+        default:
+          d[c.id] = $('#' + id).value;
+      }
+    }
+    return d;
+  }
+
+  function definirValor(c, v) {
+    const id = 'f-' + c.id;
+    if (c.tipo === 'opcoes' && c.estilo !== 'lista') {
+      for (const r of form.querySelectorAll(`input[name="${id}"]`)) r.checked = r.value === v;
+    } else if (c.tipo === 'checkbox' || c.tipo === 'parecer') {
+      $('#' + id).checked = !!v;
+    } else {
+      $('#' + id).value = v == null ? '' : v;
+    }
+  }
+
+  /** Preenche os campos automáticos (datas finais, Oficial de Justiça...) que não foram editados à mão. */
+  function aplicarAutomaticos(d) {
+    estado.calculados.clear();
+    for (const c of M.campos(estado.modelo)) {
+      if (!c.auto || estado.manuais.has(c.id)) continue;
+      let v;
+      try {
+        v = c.auto(M.prepararDados(estado.modelo, d), U);
+      } catch (e) {
+        v = undefined;
+      }
+      if (v === undefined) continue;
+      estado.calculados.add(c.id);
+      if (v === d[c.id]) continue;
+      definirValor(c, v);
+      d[c.id] = v;
+    }
+  }
+
+  function atualizarIndicadores(d, dd) {
+    for (const c of M.campos(estado.modelo)) {
+      if (c.tipo === 'parecer') $('#f-doc_' + c.id).disabled = !d[c.id];
+
+      if (c.tipo === 'lotacao') {
+        const art = U.detectarArtigo(d[c.id]);
+        $('#f-' + c.id + '_artigo').options[0].text = art ? `auto (${U.contracao('em', art)})` : 'auto';
+      }
+
+      if (!c.auto) continue;
+      const dica = $('#dica-' + c.id);
+      const input = $('#f-' + c.id);
+      const manual = estado.manuais.has(c.id);
+      const calculado = estado.calculados.has(c.id) && !!d[c.id];
+      const situacao = manual ? 'manual' : (calculado && M.visivel(c, dd) ? 'auto' : 'dica');
+      // Só recria o conteúdo quando a situação muda: recriar o botão entre o mousedown e o
+      // click (o "change" do campo anterior dispara nesse intervalo) faria o clique se perder.
+      if (dica.dataset.situacao !== situacao) {
+        dica.dataset.situacao = situacao;
+        dica.textContent = '';
+        if (situacao === 'manual') {
+          dica.append(el('button', { type: 'button', class: 'reset-auto', dataset: { campo: c.id },
+            title: 'Voltar a calcular este campo automaticamente' }, '↺ recalcular'));
+        } else if (situacao === 'auto') {
+          dica.append(el('span', { class: 'tag-auto' }, 'automático'));
+        } else if (c.dica) {
+          dica.textContent = c.dica;
+        }
+      }
+      if (input && input.type !== 'checkbox') input.classList.toggle('automatico', !manual && calculado);
+    }
+  }
+
+  function atualizarVisibilidade(dd) {
+    estado.modelo.secoes.forEach((s, i) => {
+      $(`[data-secao="${i}"]`, form).hidden = !M.visivel(s, dd);
+      for (const c of s.campos) $(`[data-campo="${c.id}"]`, form).hidden = !M.visivel(c, dd);
+    });
+  }
+
+  // ---------- Prévia ----------
+
+  function renderizarAbas() {
+    const abas = $('#abas');
+    abas.innerHTML = '';
+    for (const doc of estado.modelo.documentos) {
+      abas.append(el('button', { type: 'button', class: 'aba', role: 'tab', dataset: { doc: doc.id },
+        'aria-selected': String(doc.id === estado.docId) },
+      doc.nome, el('span', { class: 'contador', id: 'contador-' + doc.id, hidden: true })));
+    }
+  }
+
+  function renderizarPrevia(d) {
+    const config = valoresConfiguracao();
+    for (const doc of estado.modelo.documentos) {
+      const r = M.gerar(estado.modelo, doc.id, d, config);
+      const contador = $('#contador-' + doc.id);
+      contador.textContent = r.pendentes.length;
+      contador.hidden = !r.pendentes.length;
+      contador.title = `${r.pendentes.length} campo(s) pendente(s)`;
+      if (doc.id === estado.docId) estado.resultado = r;
+    }
+
+    const r = estado.resultado;
+    $('#previa').innerHTML = M.htmlPrevia(r);
+
+    const caixa = $('#pendentes');
+    caixa.classList.toggle('ok', !r.pendentes.length);
+    caixa.innerHTML = r.pendentes.length
+      ? `<strong>${r.pendentes.length} pendente(s):</strong> ${r.pendentes.map(U.escaparHTML).join(', ')}`
+      : 'Nenhum campo pendente neste documento.';
+
+    const avisos = M.avisos(estado.modelo, d);
+    $('#avisos').innerHTML = avisos.length ? `<ul>${avisos.map((a) => `<li>${U.escaparHTML(a)}</li>`).join('')}</ul>` : '';
+  }
+
+  function atualizar() {
+    const d = coletar();
+    aplicarAutomaticos(d);
+    const dd = M.prepararDados(estado.modelo, d);
+    atualizarVisibilidade(dd);
+    atualizarIndicadores(d, dd);
+    renderizarPrevia(d);
+  }
+
+  // ---------- Configurações ----------
+
+  function renderizarConfiguracoes() {
+    const caixa = $('#configuracoes');
+    caixa.innerHTML = '';
+    const valores = valoresConfiguracao();
+    for (const c of estado.modelo.configuracoes || []) {
+      const input = el('input', { type: 'text', id: 'cfg-' + c.id, value: valores[c.id] });
+      input.addEventListener('input', () => {
+        (preferencias.valores[estado.modelo.id] = preferencias.valores[estado.modelo.id] || {})[c.id] = input.value;
+        salvarPreferencias();
+        atualizar();
+      });
+      caixa.append(el('div', { class: 'campo' }, el('div', { class: 'rotulo' }, el('label', { for: input.id }, c.rotulo)), input));
+    }
+    $('#cfg-inline').checked = !!preferencias.inline;
+  }
+
+  // ---------- Cópia ----------
+
+  async function copiarRico(html, texto) {
+    try {
+      if (navigator.clipboard && window.ClipboardItem) {
+        await navigator.clipboard.write([new ClipboardItem({
+          'text/html': new Blob([html], { type: 'text/html' }),
+          'text/plain': new Blob([texto], { type: 'text/plain' }),
+        })]);
+        return true;
+      }
+    } catch (e) { /* tenta o método antigo abaixo */ }
+    const div = el('div', { contenteditable: 'true', style: 'position:fixed;left:-9999px;top:0' });
+    div.innerHTML = html;
+    document.body.append(div);
+    const sel = window.getSelection();
+    const faixa = document.createRange();
+    faixa.selectNodeContents(div);
+    sel.removeAllRanges();
+    sel.addRange(faixa);
+    let ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+    sel.removeAllRanges();
+    div.remove();
+    return ok;
+  }
+
+  async function copiarTexto(texto) {
+    try {
+      await navigator.clipboard.writeText(texto);
+      return true;
+    } catch (e) {
+      const ta = el('textarea', { style: 'position:fixed;left:-9999px;top:0' });
+      ta.value = texto;
+      document.body.append(ta);
+      ta.select();
+      let ok = false;
+      try { ok = document.execCommand('copy'); } catch (e2) { ok = false; }
+      ta.remove();
+      return ok;
+    }
+  }
+
+  function confirmarPendentes() {
+    const n = estado.resultado.pendentes.length;
+    return !n || window.confirm(`Há ${n} campo(s) pendente(s), destacados em amarelo:\n\n${estado.resultado.pendentes.join(', ')}\n\nCopiar mesmo assim?`);
+  }
+
+  let temporizadorToast;
+  function avisar(msg) {
+    const t = $('#toast');
+    t.textContent = msg;
+    t.classList.add('visivel');
+    clearTimeout(temporizadorToast);
+    temporizadorToast = setTimeout(() => t.classList.remove('visivel'), 3500);
+  }
+
+  // ---------- Eventos ----------
+
+  function aoEditar(e) {
+    const alvo = e.target;
+    const wrap = alvo.closest('[data-campo]');
+    if (wrap) {
+      const c = campoPorId(wrap.dataset.campo);
+      // Edição direta de um campo automático: a partir daqui ele não é mais recalculado.
+      if (c && c.auto && (alvo.id === 'f-' + c.id || alvo.name === 'f-' + c.id)) estado.manuais.add(c.id);
+    }
+    atualizar();
+  }
+
+  function trocarModelo(id) {
+    estado.modelo = M.buscar(id);
+    estado.docId = estado.modelo.documentos[0].id;
+    estado.manuais.clear();
+    renderizarFormulario();
+    renderizarAbas();
+    renderizarConfiguracoes();
+    atualizar();
+  }
+
+  function iniciar() {
+    const seletor = $('#seletor-modelo');
+    for (const m of M.modelos) seletor.append(el('option', { value: m.id }, m.nome));
+    seletor.addEventListener('change', () => trocarModelo(seletor.value));
+
+    form.addEventListener('input', aoEditar);
+    form.addEventListener('change', aoEditar);
+    form.addEventListener('submit', (e) => e.preventDefault());
+    form.addEventListener('click', (e) => {
+      const botao = e.target.closest('.reset-auto');
+      if (!botao) return;
+      e.preventDefault();
+      estado.manuais.delete(botao.dataset.campo);
+      atualizar();
+    });
+
+    $('#abas').addEventListener('click', (e) => {
+      const aba = e.target.closest('.aba');
+      if (!aba) return;
+      estado.docId = aba.dataset.doc;
+      for (const a of document.querySelectorAll('.aba')) a.setAttribute('aria-selected', String(a === aba));
+      atualizar();
+    });
+
+    $('#btn-copiar').addEventListener('click', async () => {
+      if (!confirmarPendentes()) return;
+      const r = estado.resultado;
+      const ok = await copiarRico(M.htmlSEI(r, CFG.estilosSEI, preferencias.inline), M.textoSimples(r));
+      avisar(ok ? 'Copiado! No editor do SEI, cole com Ctrl+V.' : 'Não foi possível copiar. Selecione o texto da prévia e use Ctrl+C.');
+    });
+
+    $('#btn-copiar-texto').addEventListener('click', async () => {
+      if (!confirmarPendentes()) return;
+      const ok = await copiarTexto(M.textoSimples(estado.resultado));
+      avisar(ok ? 'Texto simples copiado.' : 'Não foi possível copiar. Selecione o texto da prévia e use Ctrl+C.');
+    });
+
+    $('#btn-exemplo').addEventListener('click', () => {
+      estado.manuais.clear();
+      aplicarPadroes();
+      const ex = estado.modelo.exemplo || {};
+      for (const c of M.campos(estado.modelo)) {
+        if (c.id in ex) definirValor(c, ex[c.id]);
+        if (c.tipo === 'parecer' && ('doc_' + c.id) in ex) $('#f-doc_' + c.id).value = ex['doc_' + c.id];
+      }
+      atualizar();
+    });
+
+    $('#btn-limpar').addEventListener('click', () => {
+      if (!window.confirm('Limpar todos os campos do formulário?')) return;
+      estado.manuais.clear();
+      aplicarPadroes();
+      atualizar();
+    });
+
+    $('#cfg-inline').addEventListener('change', (e) => {
+      preferencias.inline = e.target.checked;
+      salvarPreferencias();
+    });
+
+    $('#btn-restaurar').addEventListener('click', () => {
+      delete preferencias.valores[estado.modelo.id];
+      preferencias.inline = true;
+      salvarPreferencias();
+      renderizarConfiguracoes();
+      atualizar();
+    });
+
+    trocarModelo(M.modelos[0].id);
+  }
+
+  iniciar();
+})();
+</script>
+</body>
+</html>

@@ -122,3 +122,16 @@ testes/gerar.test.js    testes
 
 Os textos ficam nas fórmulas da aba oculta `Calc`. Para mudar um texto de forma segura, edite
 `planilha/gerar_planilha.py` e gere a planilha de novo com `python3 planilha/gerar_planilha.py`.
+
+## Arquivo único (HTML)
+
+`AssessorSEI.html` é a página inteira num só arquivo: basta abrir com dois cliques no navegador,
+sem internet e sem instalar nada. Dá para mandar por e-mail ou guardar numa pasta da rede.
+A trava de privacidade continua ativa. Na conferência da aba Rede (PRIVACIDADE.md), aparece uma
+única linha no carregamento (o próprio arquivo), em vez de 7.
+
+O arquivo é gerado a partir dos originais. Depois de mudar um texto ou modelo, gere de novo:
+
+```bash
+python3 gerar_html_unico.py
+```
